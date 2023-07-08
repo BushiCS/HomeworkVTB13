@@ -3,22 +3,20 @@ package org.example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class OrderService {
     @Autowired
     Cart cart;
-    Product product;
-    @Autowired
-    ProductService productService;
 
+    public void createOrderFromCurrentCart() {
+        List<Product> products = cart.getOrderProducts();
+        System.out.println("\n КОРЗИНА: ");
+        products.stream()
+                .filter(product -> !product.getTitle().equals("unknown product"))
+                .forEach(product -> System.out.printf("%-8s %s %-4d \n", product.getTitle(), "|", product.getCost()));
 
-    public void createOrder() {
-        product = productService.productList.get((int) (Math.random() * productService.productList.size()));
-        cart.add(product);
-        for (Product orderProduct : cart.getOrderProducts()) {
-            System.out.println(orderProduct.getTitle() + " | цена: " + orderProduct.getCost() + " руб.");
-        }
-
-
+        System.out.println("ИТОГО: " + products.stream().mapToInt(Product::getCost).sum() + " руб");
     }
 }

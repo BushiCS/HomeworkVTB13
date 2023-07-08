@@ -6,9 +6,13 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class Main {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(ConfigApp.class);
-        ProductService service = context.getBean("productService", ProductService.class);
-        service.printAll();
-        OrderService service1 = context.getBean("orderService", OrderService.class);
-        service1.createOrder();
+        ProductService productService = context.getBean("productService", ProductService.class);
+        productService.printAll();
+        Cart cart = context.getBean("cart", Cart.class);
+        OrderService orderService = context.getBean("orderService", OrderService.class);
+        cart.add(productService.findByTitle("Батон"));
+        cart.add(productService.findByTitle("фыв"));
+        cart.add(productService.findByTitle("Хлеб"));
+        orderService.createOrderFromCurrentCart();
     }
 }
